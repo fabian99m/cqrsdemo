@@ -1,0 +1,8 @@
+events:
+    queueName: arqcola
+    topicArn: arn:aws:sns:us-east-1:000000000000:arqtopic
+
+aws:
+    s3:
+        bucket: testbucket
+        maxSize: 10

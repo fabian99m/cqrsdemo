@@ -1,0 +1,32 @@
+awslocal sqs send-message --queue-url http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/testcola --message-body "test"
+
+awslocal sqs receive-message --queue-url http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/arqcola  --max-number-of-messages 10
+
+awslocal sqs receive-message --queue-url http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/usercole  --max-number-of-messages 10
+
+
+awslocal sqs purge-queue --queue-url http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/arqcola
+
+
+awslocal sqs send-message --queue-url http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/usercola --message-body "user"
+
+
+awslocal sqs send-message --queue-url http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/arqcola --message-body "{\"name\":\"holacommand\"}"
+ --message-attributes '{ "typeMessage":{ "DataType":"String","StringValue":"Coomand" }}'
+
+awslocal sqs send-message --queue-url http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/arqcola --message-body "{\"name\":\"holacommand\",\"payload\":\"type\":\"CC\",\"id\":\"123\"}}"  --message-attributes '{ "typeMessage":{ "DataType":"String","StringValue":"Coomand" }}'
+
+awslocal  sqs create-queue --queue-name arqcola
+
+
+
+awslocal sns create-topic --name arqtopic
+
+
+awslocal sqs send-message --queue-url http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/arqcola --message-body '{"name":"holacommand","payload":{"type":"CC","id":"123"}}' --message-attributes file://atr.json
+
+awslocal sns subscribe --topic-arn arn:aws:sns:us-east-1:000000000000:arqtopic --protocol sqs --notification-endpoint arn:aws:sns:us-east-1:000000000000:arqcola --attributes=RawMessageDelivery=true
+
+
+awslocal s3 rm --recursive s3://testbucket
+awslocal s3api create-bucket --bucket testbucketx
