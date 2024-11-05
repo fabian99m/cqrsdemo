@@ -11,7 +11,7 @@ import (
 	"github.com/go-chi/render"
 )
 
-func NewFileRouter(r *chi.Mux, file, handler *restHandler.FileHandler) {
+func NewFileRouter(r *chi.Mux, handler *restHandler.FileHandler) {
 	r.Route("/file", func(fileRouter chi.Router) {
 		fileRouter.Post("/upload", HandleMethod(handler.ProcessUpload).ServeHTTP)
 		fileRouter.Get("/list", HandleMethod(handler.ProcessList).ServeHTTP)
@@ -19,7 +19,7 @@ func NewFileRouter(r *chi.Mux, file, handler *restHandler.FileHandler) {
 	})
 }
 
-func NewCommandRouter(r *chi.Mux, file, handler *restHandler.CommandRestHandler) {
+func NewCommandRouter(r *chi.Mux, handler *restHandler.CommandRestHandler) {
 	r.Route("/commands", func(fileRouter chi.Router) {
 		fileRouter.Post("/", HandleMethod(handler.Process).ServeHTTP)
 	})
