@@ -1,16 +1,20 @@
 package usecase
 
 import (
+	"cqrsdemo/model"
 	m "cqrsdemo/model"
 	"cqrsdemo/util"
 	"log/slog"
 )
 
 type CarUseCase struct {
+	roleOperations model.RoleOperations
 }
 
-func NewCarUseCase() MessageHandler[m.Command] {
-	return CarUseCase{}
+func NewCarUseCase(roleOperations model.RoleOperations) MessageHandler[m.Command] {
+	return CarUseCase{
+		roleOperations: roleOperations,
+	}
 }
 
 func (r CarUseCase) Process(cmd m.Command) (evt m.EventResult, err error) {
@@ -19,14 +23,26 @@ func (r CarUseCase) Process(cmd m.Command) (evt m.EventResult, err error) {
 		return
 	}
 
-	slog.Info("carUseCase process", "payload", *payload)
+	slog.Info("carUseCase process", "id", cmd.IdTrazabilidad, "payload", *payload)
 
+	id, err := r.roleOperations.SaveRole(m.Role{
+		Service: "/upload",
+		Role:    "testrole",
+	})
 
+	if err != nil {
+		return
+	}
+
+	return event("car.out", map[string]any{
+		"message": id,
+	})
+}
+
+func event(name string, payload any) (m.EventResult, error) {
 	return m.EventResult{
-		Name:  "car.out",
-		Scope: "EXT",
-		Payload: map[string]string{
-			"message": "Test",
-		},
+		Name:    name,
+		Scope:   "EXT",
+		Payload: payload,
 	}, nil
 }

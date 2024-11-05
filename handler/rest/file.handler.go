@@ -15,13 +15,13 @@ import (
 )
 
 type FileHandler struct {
-	s3Action adapter.S3Operations
-	props    *model.BucketProps
+	s3Operations adapter.S3Operations
+	props        *model.BucketProps
 }
 
 func NewFileHandler(s3Action adapter.S3Operations, props *model.BucketProps) *FileHandler {
 	return &FileHandler{
-		s3Action: s3Action, props: props,
+		s3Operations: s3Action, props: props,
 	}
 }
 
@@ -37,7 +37,7 @@ func (fh *FileHandler) ProcessList(w http.ResponseWriter, r *http.Request) error
 		}
 	}
 
-	ls, err := fh.s3Action.ListFiles(fh.props.Name, &adapter.S3Pagination{
+	ls, err := fh.s3Operations.ListFiles(fh.props.Name, &adapter.S3Pagination{
 		MaxKeys: int32(maxkeys),
 		Next:    next,
 	})
@@ -62,7 +62,7 @@ func (fh *FileHandler) ProcessDownloadFile(w http.ResponseWriter, r *http.Reques
 		}
 	}
 
-	file, err := fh.s3Action.DownloadFile(fh.props.Name, key)
+	file, err := fh.s3Operations.DownloadFile(fh.props.Name, key)
 	if err != nil {
 		return e.RequestError{
 			StatusCode: http.StatusInternalServerError, Status: e.GenericError.Fmt(err),
@@ -106,7 +106,7 @@ func (fh *FileHandler) ProcessUpload(w http.ResponseWriter, r *http.Request) err
 		}
 	}
 
-	id, err := fh.s3Action.UploadFile(fh.props.Name, header.Filename, file)
+	id, err := fh.s3Operations.UploadFile(fh.props.Name, header.Filename, file)
 	if err != nil {
 		return e.RequestError{
 			StatusCode: http.StatusInternalServerError, Status: e.GenericError.Fmt(err),

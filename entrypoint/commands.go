@@ -2,24 +2,24 @@ package entrypoint
 
 import (
 	"cqrsdemo/adapter"
-	base "cqrsdemo/handler/base"
+	bdCfg "cqrsdemo/config/db"
+	config "cqrsdemo/config/props"
 	"cqrsdemo/handler/messages"
-	"cqrsdemo/model"
+	"cqrsdemo/repository"
 	"cqrsdemo/usecase"
 )
 
-func NewMessagesHandler(snsActions adapter.SnsOperations, props *model.EventProps) base.SqsHandler {
-	return handler.NewMessageHandler(CommandsHandler(), EventsHandler(), snsActions, props)
-}
+func NewMessagesHandler(snsActions adapter.SnsOperations, props *config.AppConfig) *handler.MessageHandler {
+	bdCon := bdCfg.NewDbConnection(props)
+	roleRepostory := repository.NewRoleRepository(bdCon)
 
-func CommandsHandler() handler.CmdMapper {
-	return handler.CmdMapper{
-		"holacommand": usecase.NewCarUseCase(),
+	cmds := handler.CmdMapper{
+		"holacommand": usecase.NewCarUseCase(roleRepostory),
 	}
-}
 
-func EventsHandler() handler.EvtMapper {
-	return handler.EvtMapper{
+	evts := handler.EvtMapper{
 		"car.out": usecase.NewUserUseCase(),
 	}
+	
+	return handler.NewMessageHandler(cmds, evts, snsActions, props.EventsProps.Get())
 }

@@ -3,6 +3,7 @@ package model
 import "encoding/json"
 
 type Command struct {
+	IdTrazabilidad string `json:"idTrazabilidad"`
 	BaseHandler
 }
 

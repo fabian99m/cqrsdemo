@@ -1,6 +1,15 @@
 events:
     queueName: arqcola
     topicArn: arn:aws:sns:us-east-1:000000000000:arqtopic
+    
+bdConnnection:
+    host: localhost
+    port: 5432
+    user: userroot
+    password: pass123
+    dbname: postgres
+    schema: testlocal
+    sslmode: disable
 
 aws:
     s3:

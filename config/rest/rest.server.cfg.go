@@ -4,29 +4,27 @@ import (
 	errs "cqrsdemo/errors"
 	restHandler "cqrsdemo/handler/rest"
 	"errors"
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/render"
 	"log/slog"
 	"net/http"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/render"
 )
 
-func NewRestServer(group *restHandler.GruopHandler) http.Handler {
+func NewBaseRestServer(group *restHandler.GroupHandler) http.Handler {
 	r := chi.NewRouter()
 
-	r.Get("/hi", func(w http.ResponseWriter, r *http.Request) {
-		_, err := w.Write([]byte("Hello World!"))
-		if err != nil {
-			return
-		}
-	})
-
 	r.Route("/file", func(fileRouter chi.Router) {
-		fileRouter.Method("POST", "/upload", HandleMethod(group.FileRestHandler.ProcessUpload))
-		fileRouter.Method("GET", "/list", HandleMethod(group.FileRestHandler.ProcessList))
-		fileRouter.Method("GET", "/download", HandleMethod(group.FileRestHandler.ProcessDownloadFile))
+		handler := group.FileRestHandler
+
+		fileRouter.Post("/upload", HandleMethod(handler.ProcessUpload).ServeHTTP)
+		fileRouter.Get("/list", HandleMethod(handler.ProcessList).ServeHTTP)
+		fileRouter.Get("/download", HandleMethod(handler.ProcessDownloadFile).ServeHTTP)
 	})
 
-	r.Method("POST", "/commands", HandleMethod(group.CommandRestHandler.Process))
+	r.Route("/commands", func(fileRouter chi.Router) {
+		fileRouter.Post("/", HandleMethod(group.CommandRestHandler.Process).ServeHTTP)
+	})
 
 	return r
 }

@@ -2,7 +2,7 @@ package handler
 
 import (
 	"cqrsdemo/adapter"
-	baseSqs "cqrsdemo/handler/base"
+//	baseSqs "cqrsdemo/handler/base"
 	m "cqrsdemo/model"
 	"cqrsdemo/util"
 	"fmt"
@@ -19,15 +19,15 @@ import (
 type CmdMapper = map[string]uc.MessageHandler[m.Command]
 type EvtMapper = map[string]uc.MessageHandler[m.Event]
 
-type messageHandler struct {
+type MessageHandler struct {
 	commands      CmdMapper
 	events        EvtMapper
 	snsOperations adapter.SnsOperations
 	props         *m.EventProps
 }
 
-func NewMessageHandler(commands CmdMapper, events EvtMapper, snsActions adapter.SnsOperations, props *m.EventProps) baseSqs.SqsHandler {
-	return &messageHandler{
+func NewMessageHandler(commands CmdMapper, events EvtMapper, snsActions adapter.SnsOperations, props *m.EventProps) *MessageHandler {
+	return &MessageHandler{
 		commands:      commands,
 		events:        events,
 		snsOperations: snsActions,
@@ -35,7 +35,15 @@ func NewMessageHandler(commands CmdMapper, events EvtMapper, snsActions adapter.
 	}
 }
 
-func (r messageHandler) ReciveMessage(message sqstypes.Message) bool {
+func (r MessageHandler) GetCmds() CmdMapper {
+	return r.commands;
+}
+
+func (r MessageHandler) GetEvts() EvtMapper {
+	return r.events
+}
+
+func (r MessageHandler) ReciveMessage(message sqstypes.Message) bool {
 	slog.Debug("Message received...", "atrr", &message)
 
 	typeMessage, exit := messageValidation(message)
@@ -53,7 +61,7 @@ func (r messageHandler) ReciveMessage(message sqstypes.Message) bool {
 	return r.publishEvent(&result) == nil
 }
 
-func (r messageHandler) proccesMessage(typeMessage m.MessageType, message sqstypes.Message, result *m.EventResult) (bool, error) {
+func (r MessageHandler) proccesMessage(typeMessage m.MessageType, message sqstypes.Message, result *m.EventResult) (bool, error) {
 	switch {
 	case typeMessage == m.COMMAND:
 		return r.processCommand(message, result)
@@ -62,7 +70,7 @@ func (r messageHandler) proccesMessage(typeMessage m.MessageType, message sqstyp
 	}
 }
 
-func (r messageHandler) processCommand(message sqstypes.Message, result *m.EventResult) (exit bool, _ error) {
+func (r MessageHandler) processCommand(message sqstypes.Message, result *m.EventResult) (exit bool, _ error) {
 	jsonBody := message.Body
 	slog.Debug("comando recibido", "body", *jsonBody)
 
@@ -84,7 +92,7 @@ func (r messageHandler) processCommand(message sqstypes.Message, result *m.Event
 	return false, nil
 }
 
-func (r messageHandler) processEvent(message sqstypes.Message, result *m.EventResult) (exit bool, _ error) {
+func (r MessageHandler) processEvent(message sqstypes.Message, result *m.EventResult) (exit bool, _ error) {
 	jsonBody := message.Body
 	slog.Debug("evento recibido", "body", *jsonBody)
 
@@ -106,7 +114,7 @@ func (r messageHandler) processEvent(message sqstypes.Message, result *m.EventRe
 	return false, nil
 }
 
-func (r messageHandler) publishEvent(payload *m.EventResult) error {
+func (r MessageHandler) publishEvent(payload *m.EventResult) error {
 	slog.Info("publishing event ", "name", payload.Name)
 
 	jsonString, err := json.Marshal(payload)

@@ -26,7 +26,7 @@ type Status struct {
 	Message string `json:"message"`
 }
 
-func (s *Status) Fmt(args ...any) Status {
+func (s Status) Fmt(args ...any) Status {
 	s.Message = fmt.Sprintf(s.Message, args)
-	return *s
+	return s
 }
