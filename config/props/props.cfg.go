@@ -51,17 +51,17 @@ type S3 struct {
 	MaxSize int32  `yaml:"maxSize"`
 }
 
-func ReadConfig() *AppConfig {
+func ReadConfig[T any]() *T {
 	yamlFile, err := os.ReadFile("app.yml")
 	if err != nil {
 		panic(err)
 	}
 
-	var app AppConfig
-	err = yaml.Unmarshal(yamlFile, &app)
+	app := new(T)
+	err = yaml.Unmarshal(yamlFile, app)
 	if err != nil {
 		panic(err)
 	}
 
-	return &app
+	return app
 }

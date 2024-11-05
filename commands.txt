@@ -29,4 +29,4 @@ awslocal sns subscribe --topic-arn arn:aws:sns:us-east-1:000000000000:arqtopic -
 
 
 awslocal s3 rm --recursive s3://testbucket
-awslocal s3api create-bucket --bucket testbucketx
+awslocal s3api create-bucket --bucket testbucket

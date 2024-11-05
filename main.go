@@ -20,7 +20,7 @@ func main() {
 	}))
 	slog.SetDefault(logger)
 
-	appConfig := propsCfg.ReadConfig()
+	appConfig := propsCfg.ReadConfig[propsCfg.AppConfig]()
 	evtProps := appConfig.EventsProps
 
 	sqsOperations := awsCfg.NewSqsClient()
