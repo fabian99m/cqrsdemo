@@ -28,11 +28,13 @@ func (Role) TableName() string {
 }
 
 func (r *RoleRepository) GetRoleByMethod(service string) (string, error) {
+	slog.Info("start GetRoleByMethod", "service", service)
+
 	var role Role
 
 	tx := r.db.Limit(1).Find(&role, "service = ?", service)
 	if err := tx.Error; err != nil {
-		slog.Error("eror getting role by method", "error", err)
+		slog.Error("error getting role by method", "error", err)
 		return "", err
 	}
 
@@ -40,7 +42,8 @@ func (r *RoleRepository) GetRoleByMethod(service string) (string, error) {
 }
 
 func (r *RoleRepository) SaveRole(role m.Role) (int, error) {
-	slog.Info("init save role", "service", role.Service)
+	slog.Info("start save role", "service", role.Service)
+
 	roleEntity := Role{
 		Role:    role.Role,
 		Service: role.Service,
