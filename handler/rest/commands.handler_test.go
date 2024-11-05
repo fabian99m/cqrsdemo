@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"cqrsdemo/adapter"
-	e "cqrsdemo/errors"
-	handler "cqrsdemo/handler/messages"
-	"cqrsdemo/model"
+	"github.com/fabian99m/cqrsdemo/adapter"
+	e "github.com/fabian99m/cqrsdemo/errors"
+	handler "github.com/fabian99m/cqrsdemo/handler/messages"
+	"github.com/fabian99m/cqrsdemo/model"
 	"fmt"
 	"strings"
 

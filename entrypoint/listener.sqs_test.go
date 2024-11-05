@@ -1,8 +1,8 @@
 package entrypoint
 
 import (
-	adr "cqrsdemo/adapter"
-	handler "cqrsdemo/handler/base"
+	adr "github.com/fabian99m/cqrsdemo/adapter"
+	handler "github.com/fabian99m/cqrsdemo/handler/base"
 	"fmt"
 	"testing"
 

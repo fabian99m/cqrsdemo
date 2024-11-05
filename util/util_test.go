@@ -1,7 +1,7 @@
 package util
 
 import (
-	m "cqrsdemo/model"
+	m "github.com/fabian99m/cqrsdemo/model"
 	"testing"
 
 	"github.com/stretchr/testify/assert"

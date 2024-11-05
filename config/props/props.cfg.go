@@ -1,7 +1,7 @@
 package config
 
 import (
-	"cqrsdemo/model"
+	"github.com/fabian99m/cqrsdemo/model"
 	"os"
 
 	"gopkg.in/yaml.v3"

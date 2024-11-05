@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"cqrsdemo/adapter"
-	e "cqrsdemo/errors"
-	"cqrsdemo/model"
+	"github.com/fabian99m/cqrsdemo/adapter"
+	e "github.com/fabian99m/cqrsdemo/errors"
+	"github.com/fabian99m/cqrsdemo/model"
 	"fmt"
 	"io"
 	"log/slog"

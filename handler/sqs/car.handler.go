@@ -1,7 +1,7 @@
 package handler
 
 import (
-	handler "cqrsdemo/handler/base"
+	handler "github.com/fabian99m/cqrsdemo/handler/base"
 	"log/slog"
 
 	sqstypes "github.com/aws/aws-sdk-go-v2/service/sqs/types"

@@ -1,8 +1,8 @@
 package config
 
 import (
-	errs "cqrsdemo/errors"
-	restHandler "cqrsdemo/handler/rest"
+	errs "github.com/fabian99m/cqrsdemo/errors"
+	restHandler "github.com/fabian99m/cqrsdemo/handler/rest"
 	"errors"
 	"log/slog"
 	"net/http"

@@ -1,13 +1,13 @@
 package handler
 
 import (
-	e "cqrsdemo/errors"
-	h "cqrsdemo/handler/messages"
+	e "github.com/fabian99m/cqrsdemo/errors"
+	h "github.com/fabian99m/cqrsdemo/handler/messages"
 
 	"github.com/go-chi/render"
 
-	"cqrsdemo/adapter"
-	"cqrsdemo/model"
+	"github.com/fabian99m/cqrsdemo/adapter"
+	"github.com/fabian99m/cqrsdemo/model"
 	"encoding/json"
 	"io"
 	"net/http"

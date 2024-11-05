@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"cqrsdemo/adapter"
-	"cqrsdemo/model"
-	"cqrsdemo/usecase"
+	"github.com/fabian99m/cqrsdemo/adapter"
+	"github.com/fabian99m/cqrsdemo/model"
+	"github.com/fabian99m/cqrsdemo/usecase"
 	"fmt"
 
 	"testing"

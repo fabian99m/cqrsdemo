@@ -1,9 +1,9 @@
 package usecase
 
 import (
-	"cqrsdemo/model"
-	m "cqrsdemo/model"
-	"cqrsdemo/util"
+	"github.com/fabian99m/cqrsdemo/model"
+	m "github.com/fabian99m/cqrsdemo/model"
+	"github.com/fabian99m/cqrsdemo/util"
 	"log/slog"
 )
 

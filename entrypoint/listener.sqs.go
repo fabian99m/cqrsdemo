@@ -1,8 +1,8 @@
 package entrypoint
 
 import (
-	"cqrsdemo/adapter"
-	handler "cqrsdemo/handler/base"
+	"github.com/fabian99m/cqrsdemo/adapter"
+	handler "github.com/fabian99m/cqrsdemo/handler/base"
 	"log/slog"
 
 	"github.com/aws/aws-sdk-go-v2/service/sqs/types"

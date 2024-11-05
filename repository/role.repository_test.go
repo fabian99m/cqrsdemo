@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"cqrsdemo/model"
+	"github.com/fabian99m/cqrsdemo/model"
 	"errors"
 	"fmt"
 	"log"

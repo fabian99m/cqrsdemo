@@ -1,7 +1,7 @@
 package config
 
 import (
-	props "cqrsdemo/config/props"
+	props "github.com/fabian99m/cqrsdemo/config/props"
 	
 	"fmt"
 	"log"

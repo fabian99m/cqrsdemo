@@ -1,7 +1,7 @@
 package repository
 
 import (
-	m "cqrsdemo/model"
+	m "github.com/fabian99m/cqrsdemo/model"
 	"log/slog"
 
 	"gorm.io/gorm"

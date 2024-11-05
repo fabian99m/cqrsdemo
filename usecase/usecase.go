@@ -1,7 +1,7 @@
 package usecase
 
 import (
-    m "cqrsdemo/model"
+    m "github.com/fabian99m/cqrsdemo/model"
 )
 
 type MessageHandler[T Message] interface {

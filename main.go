@@ -1,12 +1,12 @@
 package main
 
 import (
-	awsCfg "cqrsdemo/config/aws"
-	propsCfg "cqrsdemo/config/props"
-	restCfg "cqrsdemo/config/rest"
+	awsCfg "github.com/fabian99m/cqrsdemo/config/aws"
+	propsCfg "github.com/fabian99m/cqrsdemo/config/props"
+	restCfg "github.com/fabian99m/cqrsdemo/config/rest"
 
-	"cqrsdemo/entrypoint"
-	restH "cqrsdemo/handler/rest"
+	"github.com/fabian99m/cqrsdemo/entrypoint"
+	restH "github.com/fabian99m/cqrsdemo/handler/rest"
 
 	"log/slog"
 	"os"

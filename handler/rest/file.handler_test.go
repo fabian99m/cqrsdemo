@@ -2,10 +2,10 @@ package handler
 
 import (
 	"bytes"
-	adr "cqrsdemo/adapter"
-	e "cqrsdemo/errors"
-	"cqrsdemo/model"
-	"cqrsdemo/util"
+	adr "github.com/fabian99m/cqrsdemo/adapter"
+	e "github.com/fabian99m/cqrsdemo/errors"
+	"github.com/fabian99m/cqrsdemo/model"
+	"github.com/fabian99m/cqrsdemo/util"
 	"errors"
 	"fmt"
 	"io"

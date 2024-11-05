@@ -1,14 +1,13 @@
 package handler
 
 import (
-	"cqrsdemo/adapter"
-//	baseSqs "cqrsdemo/handler/base"
-	m "cqrsdemo/model"
-	"cqrsdemo/util"
+	"github.com/fabian99m/cqrsdemo/adapter"
+	m "github.com/fabian99m/cqrsdemo/model"
+	"github.com/fabian99m/cqrsdemo/util"
 	"fmt"
 	"strings"
 
-	uc "cqrsdemo/usecase"
+	uc "github.com/fabian99m/cqrsdemo/usecase"
 	"encoding/json"
 
 	"log/slog"
