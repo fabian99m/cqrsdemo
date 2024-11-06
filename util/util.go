@@ -1,6 +1,8 @@
 package util
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 func UnmarshalTo[T any](data []byte) (dest *T, err error) {
     dest = new(T)

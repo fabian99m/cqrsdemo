@@ -20,26 +20,15 @@ func NewFileRouter(r *chi.Mux, handler *restHandler.FileHandler) {
 }
 
 func NewCommandRouter(r *chi.Mux, handler *restHandler.CommandRestHandler) {
-	r.Route("/commands", func(fileRouter chi.Router) {
-		fileRouter.Post("/", HandleMethod(handler.Process).ServeHTTP)
+	r.Route("/commands", func(commandRouter chi.Router) {
+		commandRouter.Post("/", HandleMethod(handler.Process).ServeHTTP)
 	})
 }
 
 func NewBaseRestServer(group *restHandler.GroupHandler) http.Handler {
 	r := chi.NewRouter()
-
-	r.Route("/file", func(fileRouter chi.Router) {
-		handler := group.FileRestHandler
-
-		fileRouter.Post("/upload", HandleMethod(handler.ProcessUpload).ServeHTTP)
-		fileRouter.Get("/list", HandleMethod(handler.ProcessList).ServeHTTP)
-		fileRouter.Get("/download", HandleMethod(handler.ProcessDownloadFile).ServeHTTP)
-	})
-
-	r.Route("/commands", func(fileRouter chi.Router) {
-		fileRouter.Post("/", HandleMethod(group.CommandRestHandler.Process).ServeHTTP)
-	})
-
+	NewFileRouter(r, &group.FileRestHandler)
+	NewCommandRouter(r, &group.CommandRestHandler)
 	return r
 }
 

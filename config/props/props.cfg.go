@@ -1,8 +1,10 @@
 package config
 
 import (
-	"github.com/fabian99m/cqrsdemo/model"
 	"os"
+	"sync"
+
+	"github.com/fabian99m/cqrsdemo/model"
 
 	"gopkg.in/yaml.v3"
 )
@@ -51,8 +53,18 @@ type S3 struct {
 	MaxSize int32  `yaml:"maxSize"`
 }
 
-func ReadConfig[T any]() *T {
-	yamlFile, err := os.ReadFile("app.yml")
+var app *AppConfig
+var once sync.Once
+
+func ReadAppConfig() *AppConfig {
+	once.Do(func() {
+		app = ReadConfig[AppConfig]("app.yml")
+	})
+	return app
+}
+
+func ReadConfig[T any](path string) *T {
+	yamlFile, err := os.ReadFile(path)
 	if err != nil {
 		panic(err)
 	}
