@@ -2,10 +2,6 @@ package handler
 
 import (
 	"bytes"
-	adr "github.com/fabian99m/cqrsdemo/adapter"
-	e "github.com/fabian99m/cqrsdemo/errors"
-	"github.com/fabian99m/cqrsdemo/model"
-	"github.com/fabian99m/cqrsdemo/util"
 	"errors"
 	"fmt"
 	"io"
@@ -14,6 +10,11 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	adr "github.com/fabian99m/cqrsdemo/adapter"
+	e "github.com/fabian99m/cqrsdemo/errors"
+	"github.com/fabian99m/cqrsdemo/model"
+	"github.com/fabian99m/cqrsdemo/util"
 
 	queryBuilder "github.com/google/go-querystring/query"
 	mock "github.com/ovechkin-dm/mockio/mock"
@@ -111,7 +112,7 @@ func TestDownloadFile(t *testing.T) {
 		{
 			name:       "empty key",
 			key:        "",
-			errorCode:  e.ParamsNotFound.Code,
+			errorCode:  e.InvalidParams.Code,
 			statusCode: http.StatusBadRequest,
 		},
 		{

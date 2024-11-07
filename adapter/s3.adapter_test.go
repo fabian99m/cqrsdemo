@@ -16,11 +16,12 @@ func TestDownloadFile(t *testing.T) {
 	t.Parallel()
 
 	var tests = []struct {
-		name       string
-		fileName   string
-		out        *s3.GetObjectOutput
-		errService error
-		errRes     error
+		name        string
+		fileName    string
+		out         *s3.GetObjectOutput
+		errService  error
+		fileContent bool
+		errRes      error
 	}{
 		{
 			name:     "download success",
@@ -31,6 +32,7 @@ func TestDownloadFile(t *testing.T) {
 				ContentLength: aws.Int64(12),
 			},
 			errService: nil,
+			fileContent: true,
 			errRes:     nil,
 		},
 		{
@@ -39,6 +41,7 @@ func TestDownloadFile(t *testing.T) {
 			out:        nil,
 			errService: &types.NoSuchKey{},
 			errRes:     nil,
+			fileContent: false,
 		},
 		{
 			name:       "key not found",
@@ -46,6 +49,7 @@ func TestDownloadFile(t *testing.T) {
 			out:        nil,
 			errService: &types.NoSuchBucket{},
 			errRes:     &types.NoSuchBucket{},
+			fileContent: false,
 		},
 	}
 
@@ -56,8 +60,9 @@ func TestDownloadFile(t *testing.T) {
 			mock.When(apiMock.GetObject(mock.AnyContext(), mock.Any[*s3.GetObjectInput]())).ThenReturn(tt.out, tt.errService)
 
 			underTest := NewS3Actions(apiMock)
-			_, err := underTest.DownloadFile("testbucket", tt.fileName)
+			fileContent, err := underTest.DownloadFile("testbucket", tt.fileName)
 			assert.Equal(subtest, tt.errRes, err)
+			assert.Equal(subtest, tt.fileContent, fileContent != nil)
 		})
 	}
 }

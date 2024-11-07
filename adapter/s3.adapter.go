@@ -3,13 +3,13 @@ package adapter
 import (
 	"bytes"
 	"context"
-	"errors"
 	"io"
 	"math/rand/v2"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
+	"github.com/fabian99m/cqrsdemo/util"
 	"github.com/gabriel-vasile/mimetype"
 )
 
@@ -97,8 +97,7 @@ func (r s3Actions) DownloadFile(bucketName string, key string) (*FileContent, er
 	})
 
 	if err != nil {
-		var NoSuchKey *types.NoSuchKey
-		if errors.As(err, &NoSuchKey) {
+		if util.IsType[*types.NoSuchKey](err) {
 			return nil, nil
 		}
 

@@ -5,9 +5,9 @@ var FileNotFound = Status{
 	Message: "file not found",
 }
 
-var ParamsNotFound = Status{
+var InvalidParams = Status{
 	Code:    01,
-	Message: "params %v not found",
+	Message: "%v",
 }
 
 var FileSizeInvalid = Status{

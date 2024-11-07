@@ -49,8 +49,8 @@ func (r *Aws) GetBucketProps() *model.BucketProps {
 }
 
 type S3 struct {
-	Bucket  string `yaml:"bucket"`
-	MaxSize int32  `yaml:"maxSize"`
+	Bucket  string `yaml:"bucket" validate:"required"`
+	MaxSize int32  `yaml:"maxSize" validate:"required"`
 }
 
 var app *AppConfig
@@ -64,13 +64,14 @@ func ReadAppConfig() *AppConfig {
 }
 
 func ReadConfig[T any](path string) *T {
-	yamlFile, err := os.ReadFile(path)
+	yamlFile, err := os.Open(path)
 	if err != nil {
 		panic(err)
 	}
+	defer yamlFile.Close()
 
 	app := new(T)
-	err = yaml.Unmarshal(yamlFile, app)
+	err = yaml.NewDecoder(yamlFile).Decode(app)
 	if err != nil {
 		panic(err)
 	}

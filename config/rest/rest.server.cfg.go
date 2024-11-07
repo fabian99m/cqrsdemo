@@ -2,10 +2,11 @@ package config
 
 import (
 	"errors"
-	errs "github.com/fabian99m/cqrsdemo/errors"
-	restHandler "github.com/fabian99m/cqrsdemo/handler/rest"
 	"log/slog"
 	"net/http"
+
+	errs "github.com/fabian99m/cqrsdemo/errors"
+	restHandler "github.com/fabian99m/cqrsdemo/handler/rest"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
