@@ -28,12 +28,15 @@ func TestReciveMessageCommands(t *testing.T) {
 	var tests = []test{
 		{
 			name:    "noMessage atributes",
-			message: &sqstypes.Message{},
+			message: &sqstypes.Message{
+				MessageId: aws.String("123"),
+			},
 			exit:    true,
 		},
 		{
 			name: "messsage without typeMessage atribute",
 			message: &sqstypes.Message{
+				MessageId: aws.String("123"),
 				MessageAttributes: map[string]sqstypes.MessageAttributeValue{
 					"xxxx": {
 						StringValue: aws.String("text"),
@@ -45,6 +48,7 @@ func TestReciveMessageCommands(t *testing.T) {
 		{
 			name: "bad message struct",
 			message: &sqstypes.Message{
+				MessageId: aws.String("123"),
 				Body: aws.String("{name : test}"),
 				MessageAttributes: map[string]sqstypes.MessageAttributeValue{
 					"typeMessage": {
@@ -57,6 +61,7 @@ func TestReciveMessageCommands(t *testing.T) {
 		{
 			name: "bad message struct2",
 			message: &sqstypes.Message{
+				MessageId: aws.String("123"),
 				Body: aws.String("{name : test}"),
 				MessageAttributes: map[string]sqstypes.MessageAttributeValue{
 					"typeMessage": {
@@ -69,6 +74,7 @@ func TestReciveMessageCommands(t *testing.T) {
 		{
 			name: "command not found",
 			message: &sqstypes.Message{
+				MessageId: aws.String("123"),
 				Body: aws.String("{\"name\":\"holacommandx\",\"payload\":{\"id\":\"121213123\",\"type\":\"CE\"}}"),
 				MessageAttributes: map[string]sqstypes.MessageAttributeValue{
 					"typeMessage": {
@@ -82,6 +88,7 @@ func TestReciveMessageCommands(t *testing.T) {
 		{
 			name: "command process error",
 			message: &sqstypes.Message{
+				MessageId: aws.String("123"),
 				Body: aws.String("{\"name\":\"holacommand\",\"payload\":{\"id\":\"121213123\",\"type\":\"CE\"}}"),
 				MessageAttributes: map[string]sqstypes.MessageAttributeValue{
 					"typeMessage": {
@@ -95,6 +102,7 @@ func TestReciveMessageCommands(t *testing.T) {
 		{
 			name: "command process success",
 			message: &sqstypes.Message{
+				MessageId: aws.String("123"),
 				Body: aws.String("{\"name\":\"holacommand\",\"payload\":{\"id\":\"121213123\",\"type\":\"CE\"}}"),
 				MessageAttributes: map[string]sqstypes.MessageAttributeValue{
 					"typeMessage": {
@@ -108,6 +116,7 @@ func TestReciveMessageCommands(t *testing.T) {
 		{
 			name: "command publish event error",
 			message: &sqstypes.Message{
+				MessageId: aws.String("123"),
 				Body: aws.String("{\"name\":\"holacommand\",\"payload\":{\"id\":\"121213123\",\"type\":\"CE\"}}"),
 				MessageAttributes: map[string]sqstypes.MessageAttributeValue{
 					"typeMessage": {
@@ -150,6 +159,7 @@ func TestReciveMessageEvents(t *testing.T) {
 		{
 			name: "event not found",
 			message: &sqstypes.Message{
+				MessageId: aws.String("123"),
 				Body: aws.String("{\"name\":\"121313\",\"payload\":{\"id\":\"121213123\",\"type\":\"CE\"}}"),
 				MessageAttributes: map[string]sqstypes.MessageAttributeValue{
 					"typeMessage": {
@@ -163,6 +173,7 @@ func TestReciveMessageEvents(t *testing.T) {
 		{
 			name: "event process error",
 			message: &sqstypes.Message{
+				MessageId: aws.String("123"),
 				Body: aws.String("{\"name\":\"event1\",\"payload\":{\"id\":\"121213123\",\"type\":\"CE\"}}"),
 				MessageAttributes: map[string]sqstypes.MessageAttributeValue{
 					"typeMessage": {
@@ -176,6 +187,7 @@ func TestReciveMessageEvents(t *testing.T) {
 		{
 			name: "event success",
 			message: &sqstypes.Message{
+				MessageId: aws.String("123"),
 				Body: aws.String("{\"name\":\"event1\",\"payload\":{\"id\":\"121213123\",\"type\":\"CE\"}}"),
 				MessageAttributes: map[string]sqstypes.MessageAttributeValue{
 					"typeMessage": {
@@ -189,6 +201,7 @@ func TestReciveMessageEvents(t *testing.T) {
 		{
 			name:  "event publish event error",
 			message: &sqstypes.Message{
+				MessageId: aws.String("123"),
 				Body: aws.String("{\"name\":\"event1\",\"payload\":{\"id\":\"121213123\",\"type\":\"CE\"}}"),
 				MessageAttributes: map[string]sqstypes.MessageAttributeValue{
 					"typeMessage": {

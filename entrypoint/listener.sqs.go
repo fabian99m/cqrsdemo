@@ -1,48 +1,55 @@
 package entrypoint
 
 import (
-	"github.com/fabian99m/cqrsdemo/adapter"
-	handler "github.com/fabian99m/cqrsdemo/handler/base"
 	"log/slog"
+
+	adp "github.com/fabian99m/cqrsdemo/adapter"
+	handler "github.com/fabian99m/cqrsdemo/handler/base"
 
 	"github.com/aws/aws-sdk-go-v2/service/sqs/types"
 )
 
-var (
+const (
 	maxMessages int32 = 10
 	waitSeconds int32 = 2
 )
 
 type SqsListener struct {
-	sqs adapter.SqsOperations
+	sqs adp.SqsOperations
+	handler  handler.SqsHandler
+	queueUrl string
 }
 
-func NewSqsListener(sqs adapter.SqsOperations) *SqsListener {
-	return &SqsListener{sqs: sqs}
-}
-
-func (r SqsListener) Listen(handler handler.SqsHandler, queueName string) {
-	slog.Info("listening messages", "queue", queueName)
-
-	queueUrl, err := r.sqs.GetQueueUrl(queueName)
+func NewSqsListener(sqs adp.SqsOperations, handler handler.SqsHandler, queueName string) *SqsListener {
+	queueUrl, err := sqs.GetQueueUrl(queueName)
 	if err != nil {
 		panic(err)
 	}
 
+	return &SqsListener{
+		sqs:      sqs,
+		handler:  handler,
+		queueUrl: queueUrl,
+	}
+}
+
+func (l SqsListener) Listen() {
+	slog.Info("listening messages", "queueUrl", l.queueUrl)
+
 	chnMessages := make(chan *types.Message, maxMessages)
 	go func() {
 		for {
-			r.getMessages(chnMessages, queueUrl)
+			l.getMessages(chnMessages)
 		}
 	}()
 
 	for message := range chnMessages {
-		go r.processMessages(message, handler, queueUrl)
+		go l.processMessage(message)
 	}
 }
 
-func (r SqsListener) getMessages(chnMessages chan<- *types.Message, queueUrl string) {
-	messages, err := r.sqs.GetMessages(queueUrl, maxMessages, waitSeconds)
+func (l SqsListener) getMessages(chnMessages chan<- *types.Message) {
+	messages, err := l.sqs.GetMessages(l.queueUrl, maxMessages, waitSeconds)
 	if err != nil {
 		slog.Error("error getting messages", "error", err)
 	} else if len(messages) > 0 {
@@ -52,10 +59,10 @@ func (r SqsListener) getMessages(chnMessages chan<- *types.Message, queueUrl str
 	}
 }
 
-func (r SqsListener) processMessages(message *types.Message, handler handler.SqsHandler, queueUrl string) {
-	ok := handler.ReciveMessage(*message)
+func (l SqsListener) processMessage(message *types.Message) {
+	ok := l.handler.ReciveMessage(*message)
 	if ok {
-		err := r.sqs.DeleteMessage(queueUrl, *message.ReceiptHandle)
+		err := l.sqs.DeleteMessage(l.queueUrl, *message.ReceiptHandle)
 		if err != nil {
 			slog.Error("error removing message", "error", err)
 		}

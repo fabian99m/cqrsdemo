@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log/slog"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/go-playground/validator/v10/non-standard/validators"
@@ -30,6 +31,7 @@ func UnmarshalTo[T any](data []byte) (dest *T, err error) {
 	dest = new(T)
 	err = json.Unmarshal(data, dest)
 	if err != nil {
+		dest = nil
 		return
 	}
 	return
@@ -41,8 +43,16 @@ func ValidateStruct(s any) error {
 
 func GetValidations(err error) []string {
 	validations := []string{}
-	for _, err := range err.(validator.ValidationErrors) {
+
+	validationErrors, ok := err.(validator.ValidationErrors)
+	if !ok {
+		slog.Warn("error no es ValidationErrors", "error", err)
+		return validations
+	}
+
+	for _, err := range validationErrors {
 		validations = append(validations, fmt.Sprintf("field: %s - error: %v", err.Field(), err.Error()))
 	}
+
 	return validations
 }

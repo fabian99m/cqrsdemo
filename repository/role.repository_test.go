@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"github.com/fabian99m/cqrsdemo/model"
 	"errors"
 	"fmt"
 	"log"
@@ -9,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/fabian99m/cqrsdemo/model"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

@@ -1,10 +1,11 @@
 package entrypoint
 
 import (
-	adr "github.com/fabian99m/cqrsdemo/adapter"
-	handler "github.com/fabian99m/cqrsdemo/handler/base"
 	"fmt"
 	"testing"
+
+	adr "github.com/fabian99m/cqrsdemo/adapter"
+	handler "github.com/fabian99m/cqrsdemo/handler/base"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/sqs/types"
@@ -17,9 +18,7 @@ func TestListenQueueNotFound(t *testing.T) {
 	sqsMock := mock.Mock[adr.SqsOperations]()
 	mock.When(sqsMock.GetQueueUrl(mock.AnyString())).ThenReturn("", fmt.Errorf("aws error"))
 
-	underTest := NewSqsListener(sqsMock)
-
-	assert.Panicsf(t, func() { underTest.Listen(nil, "") }, "must panic if not queue url")
+	assert.Panicsf(t, func() { NewSqsListener(sqsMock, nil, "que") }, "must panic if not queue url")
 }
 
 func TestListenProcessMessages(t *testing.T) {
@@ -52,16 +51,17 @@ func TestListenProcessMessages(t *testing.T) {
 		t.Run(tt.name, func(subtest *testing.T) {
 			sqsMock := mock.Mock[adr.SqsOperations]()
 			mock.When(sqsMock.DeleteMessage(mock.AnyString(), mock.AnyString())).ThenReturn(tt.deleteError)
+			mock.When(sqsMock.GetQueueUrl(mock.AnyString())).ThenReturn("url", nil)
 
 			handlerMock := mock.Mock[handler.SqsHandler]()
 			mock.WhenSingle(handlerMock.ReciveMessage(mock.Any[types.Message]())).ThenReturn(tt.handlerSuccess)
 
-			underTest := NewSqsListener(sqsMock)
+			underTest := NewSqsListener(sqsMock, handlerMock, "queue")
 
 			assert.NotPanics(subtest, func() {
-				underTest.processMessages(&types.Message{
+				underTest.processMessage(&types.Message{
 					ReceiptHandle: aws.String("abc"),
-				}, handlerMock, "tes")
+				})
 			})
 		})
 	}
@@ -101,11 +101,12 @@ func TestListenReceiveMessages(t *testing.T) {
 		t.Run(tt.name, func(subtest *testing.T) {
 			sqsMock := mock.Mock[adr.SqsOperations]()
 			mock.WhenDouble(sqsMock.GetMessages(mock.AnyString(), mock.Any[int32](), mock.Any[int32]())).ThenReturn(tt.serviceOut, tt.serviceError)
+			mock.When(sqsMock.GetQueueUrl(mock.AnyString())).ThenReturn("url", nil)
 
-			underTest := NewSqsListener(sqsMock)
+			underTest := NewSqsListener(sqsMock, nil, "quewue")
 
 			chnMessages := make(chan<- *types.Message, 10)
-			underTest.getMessages(chnMessages, "test")
+			underTest.getMessages(chnMessages)
 
 			assert.Equal(subtest, len(tt.serviceOut), len(chnMessages))
 		})

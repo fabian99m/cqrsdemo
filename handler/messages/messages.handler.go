@@ -19,31 +19,23 @@ type CmdMapper = map[string]uc.MessageHandler[m.Command]
 type EvtMapper = map[string]uc.MessageHandler[m.Event]
 
 type MessageHandler struct {
-	commands      CmdMapper
-	events        EvtMapper
+	Commands      CmdMapper
+	Events        EvtMapper
 	snsOperations adapter.SnsOperations
 	props         *m.EventProps
 }
 
 func NewMessageHandler(commands CmdMapper, events EvtMapper, snsActions adapter.SnsOperations, props *m.EventProps) *MessageHandler {
 	return &MessageHandler{
-		commands:      commands,
-		events:        events,
+		Commands:      commands,
+		Events:        events,
 		snsOperations: snsActions,
 		props:         props,
 	}
 }
 
-func (r MessageHandler) GetCmds() CmdMapper {
-	return r.commands;
-}
-
-func (r MessageHandler) GetEvts() EvtMapper {
-	return r.events
-}
-
 func (r MessageHandler) ReciveMessage(message sqstypes.Message) bool {
-	slog.Debug("Message received...", "atrr", &message)
+	slog.Info("Message received...", "id", *message.MessageId)
 
 	typeMessage, exit := messageValidation(message)
 	if exit {
@@ -78,7 +70,7 @@ func (r MessageHandler) processCommand(message sqstypes.Message, result *m.Event
 		return false, err
 	}
 
-	commandHandler, found := r.commands[command.Name]
+	commandHandler, found := r.Commands[command.Name]
 	if !found {
 		return true, fmt.Errorf("command {%s} no defined", command.Name)
 	}
@@ -100,7 +92,7 @@ func (r MessageHandler) processEvent(message sqstypes.Message, result *m.EventRe
 		return false, err
 	}
 
-	eventHandler, found := r.events[event.Name]
+	eventHandler, found := r.Events[event.Name]
 	if !found {
 		return true, fmt.Errorf("event %s no defined", event.Name)
 	}

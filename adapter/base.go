@@ -13,7 +13,7 @@ type SnsOperations interface {
 type SqsOperations interface {
 	GetMessages(queueUrl string, maxMessages int32, waitTime int32) ([]types.Message, error)
 	GetQueueUrl(queueName string) (string, error)
-	DeleteMessage(queueUrl string, rangeeceiptHandle string) error
+	DeleteMessage(queueUrl string, receiptHandle string) error
 }
 
 type S3Operations interface {

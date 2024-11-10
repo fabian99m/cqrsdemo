@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	"testing"
 
 	e "github.com/fabian99m/cqrsdemo/errors"
@@ -98,6 +99,69 @@ func TestUnmarshalBytes(t *testing.T) {
 			if err == nil {
 				assert.Equal(sbt, "123", dni.Id)
 			}
+		})
+	}
+}
+
+type testStruct struct {
+	Name string `validate:"required"`
+}
+
+func TestValidateStruct(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name       string
+		testStruct testStruct
+		success    bool
+	}{
+		{
+			name: "error",
+			testStruct: testStruct{
+				Name: "",
+			},
+			success: false,
+		},
+		{
+			name: "success",
+			testStruct: testStruct{
+				Name: "dasda",
+			},
+			success: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(sbt *testing.T) {
+			sbt.Log("running test: ", tt.name)
+			assert.Equal(sbt, tt.success, ValidateStruct(tt.testStruct) == nil)
+		})
+	}
+}
+
+func TestGetValidaiton(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name    string
+		err     error
+		success bool
+	}{
+		{
+			name:    "success",
+			err:     ValidateStruct(testStruct{Name: ""}),
+			success: true,
+		},
+		{
+			name:    "invalid error",
+			err:     fmt.Errorf("error"),
+			success: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(sbt *testing.T) {
+			sbt.Log("running test: ", tt.name)
+			assert.Equal(sbt, tt.success, len(GetValidations(tt.err)) > 0)
 		})
 	}
 }

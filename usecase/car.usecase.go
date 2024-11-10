@@ -1,10 +1,11 @@
 package usecase
 
 import (
+	"log/slog"
+	"strconv"
 	"github.com/fabian99m/cqrsdemo/model"
 	m "github.com/fabian99m/cqrsdemo/model"
 	"github.com/fabian99m/cqrsdemo/util"
-	"log/slog"
 )
 
 type CarUseCase struct {
@@ -34,8 +35,8 @@ func (r CarUseCase) Process(cmd m.Command) (evt m.EventResult, err error) {
 		return
 	}
 
-	return event("car.out", map[string]any{
-		"message": id,
+	return event("car.out", map[string]string{
+		"message": strconv.Itoa(id),
 	})
 }
 

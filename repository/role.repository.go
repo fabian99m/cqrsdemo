@@ -31,11 +31,9 @@ func (r *RoleRepository) GetRoleByMethod(service string) (string, error) {
 	slog.Info("start GetRoleByMethod", "service", service)
 
 	var role Role
-
-	tx := r.db.Limit(1).Find(&role, "service = ?", service)
-	if err := tx.Error; err != nil {
-		slog.Error("error getting role by method", "error", err)
-		return "", err
+	if tx := r.db.Limit(1).Find(&role, "service = ?", service); tx.Error != nil {
+		slog.Error("error getting role by method", "error", tx.Error)
+		return "", tx.Error
 	}
 
 	return role.Role, nil
